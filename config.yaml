@@ -1,0 +1,13 @@
+version: 0.01
+src_es:
+  host: 127.0.0.1
+  index: test
+  port: 9200
+target_es:
+  host: 127.0.0.1
+  index: test
+  port: 9200
+others:
+    rebuild: True
+    batch: 2000
+    where:

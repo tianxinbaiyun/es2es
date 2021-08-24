@@ -1,0 +1,11 @@
+*.exe
+*.test
+*.prof
+.DS_Store
+debug
+server
+log
+*.img
+.idea
+.vscode
+shared
