@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/olivere/elastic/v7"
-	"github.com/tianxinbaiyun/mysql2es/config"
-	"github.com/tianxinbaiyun/mysql2es/database"
+	"github.com/tianxinbaiyun/es2es/config"
+	"github.com/tianxinbaiyun/es2es/database"
 	"log"
 )
 

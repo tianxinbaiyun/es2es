@@ -2,7 +2,7 @@ package crontab
 
 import (
 	"github.com/robfig/cron/v3"
-	"github.com/tianxinbaiyun/mysql2es/service"
+	"github.com/tianxinbaiyun/es2es/service"
 	"log"
 )
 

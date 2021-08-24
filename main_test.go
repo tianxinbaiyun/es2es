@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tianxinbaiyun/mysql2es/service"
+	"github.com/tianxinbaiyun/es2es/service"
 	"testing"
 )
 

@@ -1,4 +1,4 @@
-module github.com/tianxinbaiyun/mysql2es
+module github.com/tianxinbaiyun/es2es
 
 go 1.15
 
