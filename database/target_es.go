@@ -15,7 +15,7 @@ var (
 
 // InitTargetES InitTargetES
 func InitTargetES() {
-	GetTargetESClient(config.C.SrcEs)
+	GetTargetESClient(config.C.TargetEs)
 }
 
 // GetTargetESClient 获取客户端，获取GetTargetESClient
@@ -33,7 +33,9 @@ func GetTargetESClient(conn config.EsConn) *elastic.Client {
 
 // CreateTargetESIndex 创建索引
 func CreateTargetESIndex(index string) (err error) {
-	_, err = TargetESClient.CreateIndex(index).Do(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	_, err = TargetESClient.CreateIndex(index).Do(ctx)
 	if err != nil {
 		log.Println(err)
 		return
@@ -51,16 +53,27 @@ func GetTargetESIndexExist(index string) (ok bool) {
 	return
 }
 
+// Refresh 刷新数据
+func Refresh(index string) (err error) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	_, err = TargetESClient.Refresh(index).Do(ctx)
+	//time.Sleep(time.Second)
+	return
+}
+
 // UpdateTargetES UpdateTargetES 更新
-func UpdateTargetES(index, ID string, data interface{}) (err error) {
-	_, err = TargetESClient.Update().
+func UpdateTargetES(index, id string, data interface{}) (err error) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	res, err := TargetESClient.Index().
 		Index(index).
-		Id(ID).
-		Doc(data).
-		Do(context.Background())
+		Id(id).
+		BodyJson(data).
+		Do(ctx)
 	if err != nil {
 		log.Println(err.Error())
 	}
-
+	fmt.Println(res)
 	return
 }

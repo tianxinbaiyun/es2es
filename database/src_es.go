@@ -38,7 +38,7 @@ func GetSrcESList(index string, limit, offset int64) (list []*elastic.SearchHit,
 	if limit > 0 {
 		search = search.Size(int(limit))
 	} else {
-		search = search.Size(9999)
+		search = search.Size(999)
 	}
 	if offset > 0 {
 		search = search.From(int(offset))

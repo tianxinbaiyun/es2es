@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/tianxinbaiyun/mysql2es/config"
 	"github.com/tianxinbaiyun/mysql2es/database"
@@ -14,6 +16,7 @@ func Sync() {
 		err      error
 		rows     []*elastic.SearchHit
 		offset   int64
+		count    int64
 		fistFlag bool
 	)
 
@@ -39,9 +42,9 @@ func Sync() {
 	syncCount := 0
 
 	for fistFlag || len(rows) > 0 {
-
+		fmt.Println(config.C)
 		// 从新获取数据
-		rows, offset, err = database.GetSrcESList(config.C.SrcEs.Index, offset, config.C.Others.Batch)
+		rows, count, err = database.GetSrcESList(config.C.SrcEs.Index, config.C.Others.Batch, offset)
 		if err != nil {
 			log.Println("err:", err)
 			return
@@ -56,7 +59,14 @@ func Sync() {
 
 		// 循环插入数据
 		for _, row := range rows {
-			err = database.UpdateTargetES(config.C.TargetEs.Index, row.Id, row.Source)
+			data := map[string]interface{}{}
+			err = json.Unmarshal(row.Source, &data)
+			if err != nil {
+				log.Println("err:", err)
+				return
+			}
+			//data["id"] = row.Id
+			err = database.UpdateTargetES(config.C.TargetEs.Index, row.Id, data)
 			if err != nil {
 				log.Println("err:", err)
 				return
@@ -64,14 +74,14 @@ func Sync() {
 		}
 
 		// 统计同步数量
-		syncCount = syncCount + rowLen
-
+		syncCount = syncCount + int(rowLen)
+		offset = offset + int64(rowLen)
 		// 如果返回数量小于size，结束循环
-		if int64(rowLen) < config.C.Others.Batch {
+		if count < config.C.Others.Batch {
 			break
 		}
 	}
 	log.Printf("sync done index name:%s  sync count %d", config.C.TargetEs.Index, syncCount)
-
+	//database.Refresh(config.C.TargetEs.Index)
 	return
 }
