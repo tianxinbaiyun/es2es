@@ -1,12 +1,12 @@
 version: 0.01
 src_es:
   host: 127.0.0.1
-  index: ai-map
+  index: my-index
   trace: true
   port: 9200
 target_es:
   host: 127.0.0.1
-  index: ai-map-v2
+  index: my-index-v2
   trace: true
   port: 9200
 others:
