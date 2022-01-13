@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/tianxinbaiyun/es2es/config"
+	"log"
+	"os"
 )
 
 // SrcESClient es客户端
@@ -22,7 +24,23 @@ func GetSrcESClient(conn config.EsConn) *elastic.Client {
 	if SrcESClient != nil {
 		return SrcESClient
 	}
-	client, err := elastic.NewClient(elastic.SetURL(fmt.Sprintf("http://%s:%s", conn.Host, conn.Port)), elastic.SetSniff(false))
+	options := make([]elastic.ClientOptionFunc, 0)
+	// 连接地址
+	if conn.Host != "" {
+		options = append(options, elastic.SetURL(fmt.Sprintf("http://%s:%s", conn.Host, conn.Port)))
+	}
+	// 开启日志追踪
+	if conn.Trace {
+		options = append(options, elastic.SetTraceLog(log.New(os.Stdout, "", 0)))
+	}
+	// 是否开启嗅针
+	options = append(options, elastic.SetSniff(false))
+
+	// 密码设置
+	if conn.User != "" {
+		options = append(options, elastic.SetBasicAuth(conn.User, conn.Password))
+	}
+	client, err := elastic.NewClient(options...)
 	if err != nil {
 		panic(err)
 	}

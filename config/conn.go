@@ -18,9 +18,12 @@ type Config struct {
 
 // EsConn es连接结构体
 type EsConn struct {
-	Host  string `yaml:"host"`
-	Port  string `yaml:"port"`
-	Index string `yaml:"index"`
+	Host     string `yaml:"host"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Port     string `yaml:"port"`
+	Trace    bool   `yaml:"trace"`
+	Index    string `yaml:"index"`
 }
 
 //Others 其他结构体
