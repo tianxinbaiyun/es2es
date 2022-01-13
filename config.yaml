@@ -1,13 +1,15 @@
 version: 0.01
 src_es:
   host: 127.0.0.1
-  index: test
+  index: ai-map
+  trace: true
   port: 9200
 target_es:
   host: 127.0.0.1
-  index: test
+  index: ai-map-v2
+  trace: true
   port: 9200
 others:
-    rebuild: True
+    rebuild: false
     batch: 2000
     where:
